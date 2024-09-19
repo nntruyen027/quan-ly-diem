@@ -30,6 +30,7 @@
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.8.3",
     "material-ui-popup-state": "^5.1.2",
+    "quan-ly-diem": "file:..",
     "react": "^18.3.1",
     "react-avatar-editor": "^13.0.2",
     "react-bootstrap": "^2.10.2",
