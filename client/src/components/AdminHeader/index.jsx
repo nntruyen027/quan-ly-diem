@@ -50,7 +50,7 @@ const AdminHeader = () => {
               <IconButton onClick={handleOpenUserMenu} sx={{
                 p: 0, 
               }}>
-                <Avatar alt={user.fullname} src={`${process.env.REACT_APP_IMAGE_LINK}${user?.avatar}`} />
+                <Avatar alt={user.fullname} src={`${process.env.REACT_APP_HOST_IP}/${user?.avatar}`} />
               </IconButton>
             </Tooltip>
             <Menu

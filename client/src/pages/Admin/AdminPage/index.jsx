@@ -136,7 +136,7 @@ const AdminPage = () => {
               ]} data={accounts?.map(item => ({
                 ...item,
                 'id': item._id,
-                'avatar': (<div><img src={item.avatar}/></div>),
+                'avatar': (<div className='w-20 h-20'><img src={`${process.env.REACT_APP_HOST_IP}/${item.avatar}`}/></div>),
                 'role': item?.isAdmin ? translate('admin') : item?.isTeacher ? translate('teacher') : translate('student'),
                 'address': null,
                 'photos': null,

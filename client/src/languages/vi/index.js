@@ -83,6 +83,8 @@ const table = {
   'one-period': 'Kiểm tra một tiết',
   'one-period-label': 'Kiểm tra một tiết',
   'homeroom-teacher': 'Giáo viên chủ nhiệm',
+  'role': 'Vai trò',
+  'email': 'Email',
 };
 
 const sidebar = {
