@@ -11,24 +11,26 @@ const GradePage = () => {
   const nav = useNavigate();
 
   return (
-    <Container>
-      <div className='leading-10 text-left py-2 mb-3 bg-gray-50 text-2xl flex justify-between'>
-        <Breadcrumbs aria-label='breadcrumb'>
-          <Link className='no-underline text-gray-400' color='inherit' to={teacherRoutes.assignment}>
-            {translate('assignment')}
-          </Link>
-          <Typography sx={{
-            color: 'text.primary', 
-          }}>{translate('edit-grades')}</Typography>
-        </Breadcrumbs>
-        <Button variant='contained' onClick={() => nav(`/teacher/${classId}/${subjectId}/grades`)}>{translate('view-score')}</Button>
-      </div>
-      {classId && subjectId && (
-        <>
-          <GradeDataGrid classId={classId} subjectId={subjectId} />
-        </>
-      )}
-    </Container>
+    <div className='w-full'>
+      <Container>
+        <div className='leading-10 text-left py-2 mb-3 bg-gray-50 text-2xl flex justify-between'>
+          <Breadcrumbs aria-label='breadcrumb'>
+            <Link className='no-underline text-gray-400' color='inherit' to={teacherRoutes.assignment}>
+              {translate('assignment')}
+            </Link>
+            <Typography sx={{
+              color: 'text.primary', 
+            }}>{translate('edit-grades')}</Typography>
+          </Breadcrumbs>
+          <Button variant='contained' onClick={() => nav(`/teacher/${classId}/${subjectId}/grades`)}>{translate('view-score')}</Button>
+        </div>
+        {classId && subjectId && (
+          <>
+            <GradeDataGrid classId={classId} subjectId={subjectId} />
+          </>
+        )}
+      </Container>
+    </div>
   );
 };
 
