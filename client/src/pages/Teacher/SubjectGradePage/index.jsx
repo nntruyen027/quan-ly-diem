@@ -25,9 +25,9 @@ const GradePage = () => {
           <Button variant='contained' onClick={() => nav(`/teacher/${classId}/${subjectId}/grades`)}>{translate('view-score')}</Button>
         </div>
         {classId && subjectId && (
-          <>
+          <div className='w-full'>
             <GradeDataGrid classId={classId} subjectId={subjectId} />
-          </>
+          </div>
         )}
       </Container>
     </div>
