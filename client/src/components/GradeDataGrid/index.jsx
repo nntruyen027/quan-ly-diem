@@ -268,6 +268,11 @@ const GradeDataGrid = ({ classId, subjectId, }) => {
         pageSize={10}
         processRowUpdate={handleProcessRowUpdate}
         className='w-full'
+        autoWidth 
+        sx={{
+          overflow: 'auto', 
+          maxWidth: '80vw', 
+        }}
       />
     </>
   );
