@@ -3,7 +3,9 @@ const Class = require('../models/Class')
 const TeachingAssignment = require('../models/TeachingAssignment')
 const { getAllDocuments } = require('../utils/querryDocument');
 const bcrypt = require('bcryptjs');
-
+const xlsx = require('xlsx');
+const path = require('path');
+const fs = require('fs');
 exports.getAllStudent = async (req, res) => {
 
   const query = { 
@@ -125,43 +127,52 @@ exports.getAssignmentClasses = async (req, res) => {
 }
 
 exports.createOne = async (req, res) => {
-  const { username, fullname, birthday, phone, address, email, password, isAdmin, isTeacher, className } = req.body;
+  const {
+    username,
+    fullname,
+    birthday,
+    phone,
+    address,
+    email,
+    password,
+    isAdmin,
+    isTeacher,
+    className,
+    gender,
+    father,
+    fatherPhone,
+    mother,
+    motherPhone,
+    note
+  } = req.body;
 
   try {
-    let user = await User.findOne({$or: [{ email }, {username}]});
-    if (user) {
-      return res.status(400).json({ error: 'User already exists' });
-    }
+    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+    if (existingUser) return res.status(400).json({ error: 'User already exists' });
 
-    data = {}
-    if(birthday)
-      data.birthday = birthday
-    if(phone)
-      data.phone = phone
-    if(address)
-      data.address = address
-    if(isTeacher)
-      data.isTeacher = isTeacher
-    if(isAdmin)
-      data.isAdmin = isAdmin
-    if(className)
-      data.class = className
-
-
-    const newAdmin = new User({
+    const userData = {
       username,
       fullname,
       email,
-      ...data
-    });
+      password: await bcrypt.hash(password, 10),
+      birthday,
+      phone,
+      address,
+      isAdmin,
+      isTeacher,
+      class: className,
+      gender,
+      father,
+      fatherPhone,
+      mother,
+      motherPhone,
+      note
+    };
 
-    console.log(newAdmin)
+    const newUser = new User(userData);
+    await newUser.save();
 
-    const salt = await bcrypt.genSalt(10);
-    newAdmin.password = await bcrypt.hash(password, salt);
-
-    await newAdmin.save();
-    res.status(201).json({ data: newAdmin });
+    res.status(201).json({ data: newUser });
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ error: err.message });
@@ -170,30 +181,40 @@ exports.createOne = async (req, res) => {
 
 exports.updateOne = async (req, res) => {
   try {
-    const { isAdmin, isTeacher, className } = req.body;
+    const {
+      isAdmin,
+      isTeacher,
+      className,
+      gender,
+      father,
+      fatherPhone,
+      mother,
+      motherPhone,
+      note
+    } = req.body;
     const id = req.params.id;
-  
 
-    const object = await User.findById(id);
-  
-    if (!object) {
-      return res.status(404).json({ error: 'Not found' });
-    }
+    const user = await User.findById(id);
+    if (!user) return res.status(404).json({ error: 'User not found' });
 
-    object.isAdmin = isAdmin 
-    object.isTeacher = isTeacher 
-    
-    if(className) 
-      object.class = className
+    if (isAdmin !== undefined) user.isAdmin = isAdmin;
+    if (isTeacher !== undefined) user.isTeacher = isTeacher;
+    if (className) user.class = className;
+    if (gender) user.gender = gender;
+    if (father) user.father = father;
+    if (fatherPhone) user.fatherPhone = fatherPhone;
+    if (mother) user.mother = mother;
+    if (motherPhone) user.motherPhone = motherPhone;
+    if (note) user.note = note;
 
-    await object.save();
-
-    res.status(200).json({ data: object });
+    await user.save();
+    res.status(200).json({ data: user });
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ error: err.message });
   }
-}
+};
+
 
 exports.deleteOne = async (req, res) => {
   try {
@@ -207,3 +228,156 @@ exports.deleteOne = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 }
+
+// const xlsx = require('xlsx');
+// const path = require('path');
+// const fs = require('fs');
+// const Class = require('../models/Class'); // Thay thế với đường dẫn thực tế của mô hình Class
+
+const ExcelJS = require('exceljs');
+
+exports.downloadTemplate = async (req, res) => {
+  try {
+    const classes = await Class.find({}, 'name');
+    const classNames = classes.map(cls => cls.name);
+
+    // Tạo workbook và worksheet
+    const workbook = new ExcelJS.Workbook();
+    const ws = workbook.addWorksheet('Template');
+
+    // Thêm tiêu đề vào worksheet
+    ws.addRow(["username", "fullname", "birthday", "phone", "address", "email", "password", "isAdmin (true/false)", "isTeacher (true/false)", "className", "gender", "father", "fatherPhone", "mother", "motherPhone", "note"]);
+
+    // Đặt chiều rộng cho các cột
+    ws.columns.forEach((col) => {
+      col.width = 20; // Chiều rộng mặc định cho tất cả các cột
+    });
+
+    // Thêm dữ liệu validation cho các ô dropdown
+    ws.getCell('H2').dataValidation = {
+      type: 'list',
+      allowBlank: true,
+      formula1: '"true,false"',
+      showErrorMessage: true,
+      errorTitle: 'Invalid selection',
+      error: 'Please select a value from the dropdown.',
+    };
+
+    ws.getCell('I2').dataValidation = {
+      type: 'list',
+      allowBlank: true,
+      formula1: '"true,false"',
+      showErrorMessage: true,
+      errorTitle: 'Invalid selection',
+      error: 'Please select a value from the dropdown.',
+    };
+
+    // Tạo dropdown cho className từ classNames
+    ws.getCell('J2').dataValidation = {
+      type: 'list',
+      allowBlank: true,
+      formula1: `"${classNames.join(',')}"`,
+      showErrorMessage: true,
+      errorTitle: 'Invalid selection',
+      error: 'Please select a value from the dropdown.',
+    };
+
+    // Định dạng tiêu đề
+    const headerRow = ws.getRow(1);
+    headerRow.fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FFADD8E6' },
+    };
+
+    headerRow.eachCell((cell) => {
+      cell.font = {
+        name: 'Arial',
+        size: 12,
+        bold: true,
+        color: { argb: 'FF000000' }, // Màu chữ đen
+      };
+      cell.alignment = {
+        horizontal: 'center',
+      };
+    });
+
+    // Tạo file và gửi cho người dùng
+    const filePath = path.join(__dirname, 'User_Template.xlsx');
+    await workbook.xlsx.writeFile(filePath);
+
+    res.download(filePath, (err) => {
+      if (err) {
+        console.error(err);
+      }
+      fs.unlinkSync(filePath); // Xóa file sau khi tải xuống
+    });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+exports.importUsersFromExcel = async (req, res) => {
+  try {
+    const file = req.file;  // Nhận file từ client
+
+    if (!file) return res.status(400).json({ error: 'No file uploaded' });
+
+    // Đọc file Excel
+    const workbook = xlsx.readFile(file.path);
+    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+    const rows = xlsx.utils.sheet_to_json(worksheet, { header: 1 });
+
+    const errors = [];
+    const users = [];
+
+    for (let i = 1; i < rows.length; i++) {
+      const [
+        username, fullname, birthday, phone, address, email, password, isAdmin, isTeacher, className, gender,
+        father, fatherPhone, mother, motherPhone, note
+      ] = rows[i];
+
+      // Kiểm tra tính hợp lệ và tìm ID lớp theo tên lớp
+      const classObj = await Class.findOne({ name: className.trim() });
+      if (!classObj) {
+        errors.push(`Row ${i + 1}: Class "${className}" does not exist.`);
+        continue;
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const user = new User({
+        username,
+        fullname,
+        birthday,
+        phone,
+        address,
+        email,
+        password: hashedPassword,
+        isAdmin: isAdmin === 'true',
+        isTeacher: isTeacher === 'true',
+        class: classObj._id,
+        gender,
+        father,
+        fatherPhone,
+        mother,
+        motherPhone,
+        note
+      });
+
+      users.push(user);
+    }
+
+    await User.insertMany(users);
+    fs.unlinkSync(file.path); 
+
+    res.status(200).json({
+      message: `${users.length} users have been imported successfully.`,
+      errors
+    });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ error: error.message });
+  }
+};

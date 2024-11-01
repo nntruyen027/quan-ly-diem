@@ -2,16 +2,15 @@ import React from 'react';
 import { useDispatch, useSelector, } from 'react-redux';
 import { ConfirmationModal, DataTable, Pagination, } from '~/components';
 import { translate, } from '~/helpers';
-import { getStudentsStart as getAccountsStart,
-  updateAccountStart,
-  deleteAccountStart,
-  createAccountStart, } from '~/redux/account/slice';
+import { getStudentsStart as getAccountsStart, updateAccountStart, deleteAccountStart, createAccountStart, } from '~/redux/account/slice';
 import CreateModal from './components/CreateModal';
 import UpdateModal from './components/UpdateModal';
 import { Button, FormControl, InputLabel, MenuItem, Select, } from '@mui/material';
-import * as XLSX from 'xlsx';
 import { saveAs, } from 'file-saver';
 import { getClassesStart, } from '~/redux/class/slice';
+import { uploadFileAPI, } from '~/redux/account/api'; // Import API functions
+import * as XLSX from 'xlsx';
+import DetailModal from './components/DetailModal';
 
 const StudentPage = () => {
   const dispatch = useDispatch();
@@ -28,6 +27,8 @@ const StudentPage = () => {
   const [confirmAction, setConfirmAction,] = React.useState(() => () => {});
   const [confirmMessage, setConfirmMessage,] = React.useState('');
   const [classroom, setClassroom,] = React.useState('all');
+  const [showDetail, setShowDetail,] = React.useState(false);
+
   const getAccounts = () => {
     dispatch(getAccountsStart({
       orderBy,
@@ -39,10 +40,10 @@ const StudentPage = () => {
   };
 
   const getClasses = () => {
-    dispatch((getClassesStart({
+    dispatch(getClassesStart({
       page: 1,
       limit: 1000,
-    })));
+    }));
   };
 
   React.useEffect(() => {
@@ -62,7 +63,7 @@ const StudentPage = () => {
 
   const handleUpdate = (value) => {
     const selectedCopy = {
-      ...value, 
+      ...value,
     };
     setSelectedObj(selectedCopy);
     setShowUpdate(true);
@@ -93,35 +94,20 @@ const StudentPage = () => {
     setShowConfirm(true);
   };
 
-  const handleFileUpload = (event) => {
+  const handleFileUpload = async (event) => {
     const file = event.target.files[0];
-    const reader = new FileReader();
-    
-    reader.onload = (e) => {
-      const data = new Uint8Array(e.target.result);
-      const workbook = XLSX.read(data, {
-        type: 'array', 
-      });
-      const sheetName = workbook.SheetNames[0];
-      const sheet = workbook.Sheets[sheetName];
-      const jsonData = XLSX.utils.sheet_to_json(sheet);
-      
-      jsonData?.map(value => {
-        createAccounts({
-          ...value,
-          password: String.toString(value?.password),
-          isAdmin: false,
-          isTeacher: false,
-        });
-      });
-      
-    };
-    
-    reader.readAsArrayBuffer(file);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      await uploadFileAPI(formData); // Gọi API để upload file
+      getAccounts(); // Cập nhật lại danh sách sinh viên sau khi upload
+    } catch (error) {
+      console.error('Lỗi khi upload file:', error);
+    }
   };
 
   const handleExport = () => {
-
     const worksheet = XLSX.utils.json_to_sheet(accounts.map((value, index) => ({
       'STT': index + 1,
       'Mã định danh': value?._id,
@@ -133,28 +119,43 @@ const StudentPage = () => {
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Students');
     const wbout = XLSX.write(workbook, {
-      bookType: 'xlsx', type: 'array', 
+      bookType: 'xlsx', type: 'array',
     });
     saveAs(new Blob([wbout,], {
-      type: 'application/octet-stream', 
-    }), 'students.xlsx'); 
+      type: 'application/octet-stream',
+    }), 'students.xlsx');
   };
 
-  const handleDownloadTemplate = () => {
-    const templateData = [
-      {
-        username: '', fullname: '', email: '', password: '', 
-      },
-    ];
-    const worksheet = XLSX.utils.json_to_sheet(templateData);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Template');
-    const wbout = XLSX.write(workbook, {
-      bookType: 'xlsx', type: 'array', 
-    });
-    saveAs(new Blob([wbout,], {
-      type: 'application/octet-stream', 
-    }), 'student_import_template.xlsx');
+  const handleDownloadTemplate = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/v1/accounts/students/template', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      a.download = 'student_import_template.xlsx'; // Đặt tên file tải về
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error downloading template:', error);
+    }
+  };
+
+  const handleDetail = (value) => {
+    setSelectedObj(value);
+    setShowDetail(true); // Show the detail modal
   };
 
   const render = () => (
@@ -166,6 +167,7 @@ const StudentPage = () => {
         title='Xác nhận'
         show={showConfirm}
       />
+      <DetailModal student={selectedObj} show={showDetail} onClose={() => setShowDetail(false)} />
       <CreateModal setShow={setShowCreate} show={showCreate} createAccount={createAccounts} />
       <UpdateModal setShow={setShowUpdate} show={showUpdate} updateAccount={confirmUpdateAccount} account={selectedObj} />
       <div className='flex flex-col'>
@@ -188,7 +190,6 @@ const StudentPage = () => {
                     {classes?.map((value, index) => (
                       <MenuItem key={index} value={value?._id}>{`${value?.gradeLevel}${value?.name}`}</MenuItem>
                     ))}
-
                   </Select>
                 </FormControl>
                 <Button component='label' variant='contained'>
@@ -200,10 +201,9 @@ const StudentPage = () => {
                   {translate('download-template')}
                 </Button>
               </div>
-
               <Button onClick={() => setShowCreate(true)} variant='contained'>{translate('create')}</Button>
             </div>
-            <DataTable 
+            <DataTable
               actions={[
                 {
                   label: translate('update'),
@@ -213,6 +213,10 @@ const StudentPage = () => {
                   label: translate('delete'),
                   handler: handleDelete,
                 },
+                {
+                  label: translate('details'), 
+                  handler: handleDetail, 
+                }, 
               ]}
               columns={[
                 {
@@ -244,7 +248,7 @@ const StudentPage = () => {
               data={accounts?.map(item => ({
                 ...item,
                 'id': item._id,
-                'avatar': (<div><img src={item.avatar}/></div>),
+                'avatar': (<div><img src={item.avatar} alt='Avatar' /></div>),
                 'className': `${item?.class?.gradeLevel}${item?.class?.name}`,
                 'address': null,
                 'photos': null,
@@ -252,7 +256,7 @@ const StudentPage = () => {
               keyField='_id'
               onSort={(f, des) => {
                 setOrderBy(f);
-                setDescending(des == 'desc');
+                setDescending(des === 'desc');
               }}
             />
             <Pagination count={meta?.totalPage} page={page} rowsPerPage={limit} setPage={setPage} setRowsPerPage={setLimit} />

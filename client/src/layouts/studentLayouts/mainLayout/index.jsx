@@ -23,7 +23,7 @@ const StudentMainLayout = ({ children, }) => {
     return (
       <div >
         <StudentHeader/>
-        <main className='flex bg-gray-50 h-screen overflow-hidden w-full mt-20 -translate-y-3'>
+        <main className='flex bg-gray-50 h-screen overflow-hidden w-full mt-2 -translate-y-3'>
           <div className='flex flex-col flex-grow ' >
             <div className=' overflow-y-auto p-3'>
               {children}

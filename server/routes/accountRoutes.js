@@ -13,5 +13,8 @@ router.delete('/admin/:id', isAuthorization, isAdmin, controller.deleteOne)
 router.get('/teachers/homeroom', isAuthorization, isTeacher, controller.getHomeroomClass)
 router.get('/teachers/assignments', isAuthorization, isTeacher, controller.getAssignmentClasses)
 
+router.get('/students/template', isAuthorization, isAdmin, controller.downloadTemplate); 
+router.post('/students/upload', isAuthorization, isAdmin, controller.importUsersFromExcel); 
+
 
 module.exports = router
