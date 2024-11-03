@@ -1,5 +1,6 @@
 import { apiFetch, } from '~/helpers';
 
+// Các API hiện có
 export const getAllAdminApi = (query) => apiFetch({
   url: 'accounts/admin',
   queryParams: query,
@@ -7,7 +8,7 @@ export const getAllAdminApi = (query) => apiFetch({
     headers: {
       'Authorization': `Bearer ${localStorage.getItem('token')}`,
     },
-  },  
+  },
 });
 
 export const getAllStudentApi = (query) => apiFetch({
@@ -17,7 +18,7 @@ export const getAllStudentApi = (query) => apiFetch({
     headers: {
       'Authorization': `Bearer ${localStorage.getItem('token')}`,
     },
-  },  
+  },
 });
 
 export const getAllStudentByClassApi = (id, query) => apiFetch({
@@ -27,7 +28,7 @@ export const getAllStudentByClassApi = (id, query) => apiFetch({
     headers: {
       'Authorization': `Bearer ${localStorage.getItem('token')}`,
     },
-  },  
+  },
 });
 
 export const getAllTeacherApi = (query) => apiFetch({
@@ -37,7 +38,7 @@ export const getAllTeacherApi = (query) => apiFetch({
     headers: {
       'Authorization': `Bearer ${localStorage.getItem('token')}`,
     },
-  },  
+  },
 });
 
 export const getOneApi = (id) => apiFetch({
@@ -46,10 +47,10 @@ export const getOneApi = (id) => apiFetch({
     headers: {
       'Authorization': `Bearer ${localStorage.getItem('token')}`,
     },
-  },  
+  },
 });
 
-export const createOneApi = data => apiFetch({
+export const createOneApi = (data) => apiFetch({
   url: 'accounts/admin',
   options: {
     headers: {
@@ -62,7 +63,7 @@ export const createOneApi = data => apiFetch({
   },
 });
 
-export const updateOneApi = (id,data) => apiFetch({
+export const updateOneApi = (id, data) => apiFetch({
   url: `accounts/admin/${id}`,
   options: {
     headers: {
@@ -91,6 +92,31 @@ export const getStudentsByHomeroomApi = () => apiFetch({
   options: {
     headers: {
       Accept: '*/*',
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+  },
+});
+
+// Thêm API upload file
+export const uploadFileAPI = (formData) => apiFetch({
+  url: 'accounts/students/upload', // Đường dẫn API để upload file
+  options: {
+    method: 'POST',
+    body: formData,
+    headers: {
+      Accept: '*/*',
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+  },
+});
+
+// Thêm API download template
+export const downloadTemplateAPI = () => apiFetch({
+  url: 'accounts/students/template', // Đường dẫn API để tải template
+  options: {
+    method: 'GET',
+    headers: {
+      Accept: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       Authorization: `Bearer ${localStorage.getItem('token')}`,
     },
   },
