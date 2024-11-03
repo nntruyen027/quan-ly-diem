@@ -321,7 +321,7 @@ exports.downloadTemplate = async (req, res) => {
 
 exports.importUsersFromExcel = async (req, res) => {
   try {
-    const file = req.file;  // Nhận file từ client
+    const file = req.files?.['file'][0];  // Nhận file từ client
 
     if (!file) return res.status(400).json({ error: 'No file uploaded' });
 

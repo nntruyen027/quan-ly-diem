@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const controller = require('../controllers/accountController')
 const {isAdmin, isAuthorization, isTeacher} = require('../middlewares/authMiddleware')
+const {uploadFields} = require('../middlewares/fileMiddleware')
 
 router.get('/students', isAuthorization, isTeacher, controller.getAllStudent)
 router.get('/admin', isAuthorization, isAdmin, controller.getAllAdmin)
@@ -14,7 +15,14 @@ router.get('/teachers/homeroom', isAuthorization, isTeacher, controller.getHomer
 router.get('/teachers/assignments', isAuthorization, isTeacher, controller.getAssignmentClasses)
 
 router.get('/students/template', isAuthorization, isAdmin, controller.downloadTemplate); 
-router.post('/students/upload', isAuthorization, isAdmin, controller.importUsersFromExcel); 
+router.post('/students/upload', uploadFields(
+  [
+    {
+      name: 'file',
+      maxCount: 1,
+    }, 
+  ]
+), isAuthorization, isAdmin, controller.importUsersFromExcel); 
 
 
 module.exports = router
