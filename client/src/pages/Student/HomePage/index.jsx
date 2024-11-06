@@ -16,7 +16,7 @@ const HomePage = () => {
         <Typography variant='h2' sx={{
           fontWeight: 'bold', marginBottom: 2, 
         }}>
-          Chào mừng đến với Trường Trung Học Cơ Sở ABC
+          Chào mừng đến với Trường Trung Học Phổ Thông ABC
         </Typography>
         <Typography variant='h5' sx={{
           marginBottom: 4, 

@@ -322,9 +322,9 @@ exports.downloadTemplate = async (req, res) => {
 exports.importUsersFromExcel = async (req, res) => {
   try {
     const file = req.files?.['file'][0];  // Nhận file từ client
-
+    
     if (!file) return res.status(400).json({ error: 'No file uploaded' });
-
+    
     // Đọc file Excel
     const workbook = xlsx.readFile(file.path);
     const worksheet = workbook.Sheets[workbook.SheetNames[0]];
@@ -345,8 +345,9 @@ exports.importUsersFromExcel = async (req, res) => {
         errors.push(`Row ${i + 1}: Class "${className}" does not exist.`);
         continue;
       }
-
-      const hashedPassword = await bcrypt.hash(password, 10);
+      
+      const hashedPassword = await bcrypt.hash('' + password, 10);
+      console.log(hashedPassword)
       const user = new User({
         username,
         fullname,
@@ -365,10 +366,10 @@ exports.importUsersFromExcel = async (req, res) => {
         motherPhone,
         note
       });
-
+      
       users.push(user);
     }
-
+    
     await User.insertMany(users);
     fs.unlinkSync(file.path); 
 

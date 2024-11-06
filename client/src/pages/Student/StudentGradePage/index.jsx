@@ -69,7 +69,7 @@ const StudentGradePage = () => {
         }}>
           <Typography><strong>Họ tên:</strong> {user?.fullname || 'Rỗng'}</Typography>
           <Typography><strong>Giới tính:</strong> {user?.gender || 'Rỗng'}</Typography>
-          <Typography><strong>Năm Sinh:</strong> {user?.birthday.split('T')[0] || 'Rỗng'}</Typography>
+          <Typography><strong>Năm Sinh:</strong> {user?.birthday?.split('T')[0] || 'Rỗng'}</Typography>
           <Typography><strong>Địa chỉ:</strong> {user?.address || 'Rỗng'}</Typography>
           <Typography><strong>Email:</strong> {user?.email || 'Rỗng'}</Typography>
           <Typography><strong>Họ tên cha:</strong> {user?.father || 'Rỗng'}</Typography>
