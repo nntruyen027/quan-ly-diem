@@ -11,6 +11,7 @@ import { getClassesStart, } from '~/redux/class/slice';
 import { uploadFileAPI, } from '~/redux/account/api'; // Import API functions
 import * as XLSX from 'xlsx';
 import DetailModal from './components/DetailModal';
+import Searchbar from './components/Searchbar';
 
 const StudentPage = () => {
   const dispatch = useDispatch();
@@ -28,6 +29,7 @@ const StudentPage = () => {
   const [confirmMessage, setConfirmMessage,] = React.useState('');
   const [classroom, setClassroom,] = React.useState('all');
   const [showDetail, setShowDetail,] = React.useState(false);
+  const [search, setSearch,] = React.useState('');
 
   const getAccounts = () => {
     dispatch(getAccountsStart({
@@ -37,6 +39,22 @@ const StudentPage = () => {
       descending,
       class: classroom !== 'all' ? classroom : undefined,
     }));
+  };
+
+  const handleSearch = () => {
+    if(search.trim().length < 1)
+      getAccounts();
+    else {
+      dispatch(getAccountsStart({
+        orderBy,
+        page,
+        limit,
+        descending,
+        class: classroom !== 'all' ? classroom : undefined,
+        search: search.trim(),
+      }));
+    }
+
   };
 
   const getClasses = () => {
@@ -172,6 +190,7 @@ const StudentPage = () => {
       <UpdateModal setShow={setShowUpdate} show={showUpdate} updateAccount={confirmUpdateAccount} account={selectedObj} />
       <div className='flex flex-col'>
         <div className='leading-10 text-left py-2 mb-3 bg-gray-50 text-2xl'>{translate('student')}</div>
+        <Searchbar onSearch={handleSearch} value={search} setValue={setSearch}/>
         <div className='flex flex-row w-full justify-between gap-3'>
           <div className='rounded-xl p-3 bg-white w-full'>
             <div className='text-right mb-3 flex justify-between'>
