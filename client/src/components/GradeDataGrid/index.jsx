@@ -262,18 +262,20 @@ const GradeDataGrid = ({ classId, subjectId, }) => {
           {translate('download')}
         </Button>
       </div>
-      <DataGrid
-        rows={rows}
-        columns={getColumns(subject?.numberOfOralTest, subject?.numberOf15mTest, subject?.numberOfOnePeriodTest)}
-        pageSize={10}
-        processRowUpdate={handleProcessRowUpdate}
-        className='w-full'
-        autoWidth 
-        sx={{
-          overflow: 'auto', 
-          maxWidth: '80vw', 
-        }}
-      />
+      <div className='w-full'>
+        <DataGrid
+          rows={rows}
+          columns={getColumns(subject?.numberOfOralTest, subject?.numberOf15mTest, subject?.numberOfOnePeriodTest)}
+          pageSize={10}
+          processRowUpdate={handleProcessRowUpdate}
+          className='w-full'
+          autoWidth 
+          sx={{
+            overflow: 'auto', 
+            maxWidth: '80vw', 
+          }}
+        />
+      </div>
     </>
   );
 };

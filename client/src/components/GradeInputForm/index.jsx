@@ -44,41 +44,43 @@ const GradeInputForm = ({ classId, subjectId, }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Typography variant='h6' gutterBottom>
-        Nhập điểm
-      </Typography>
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <TextField
-            label='Student ID'
-            name='studentId'
-            value={formData.studentId}
-            onChange={(e) => setFormData({
-              ...formData, studentId: e.target.value, 
-            })}
-            fullWidth
-            required
-          />
-        </Grid>
-        {Object.keys(formData.scores).map((key) => (
-          <Grid item xs={12} md={6} key={key}>
+    <div className='w-full'>
+      <form onSubmit={handleSubmit}>
+        <Typography variant='h6' gutterBottom>
+          Nhập điểm
+        </Typography>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
             <TextField
-              label={key.replace('_', ' ')}
-              name={key}
-              value={formData.scores[key]}
-              onChange={handleChange}
+              label='Student ID'
+              name='studentId'
+              value={formData.studentId}
+              onChange={(e) => setFormData({
+                ...formData, studentId: e.target.value, 
+              })}
               fullWidth
+              required
             />
           </Grid>
-        ))}
-        <Grid item xs={12}>
-          <Button type='submit' variant='contained' color='primary'>
-            Submit
-          </Button>
+          {Object.keys(formData.scores).map((key) => (
+            <Grid item xs={12} md={6} key={key}>
+              <TextField
+                label={key.replace('_', ' ')}
+                name={key}
+                value={formData.scores[key]}
+                onChange={handleChange}
+                fullWidth
+              />
+            </Grid>
+          ))}
+          <Grid item xs={12}>
+            <Button type='submit' variant='contained' color='primary'>
+              Submit
+            </Button>
+          </Grid>
         </Grid>
-      </Grid>
-    </form>
+      </form>
+    </div>
   );
 };
 
