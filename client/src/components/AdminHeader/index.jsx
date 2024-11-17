@@ -39,7 +39,10 @@ const AdminHeader = () => {
   ];
 
   return (
-    <Paper className='mx-auto w-full px-16 py-3'>
+    <Paper sx={{
+      background: '#42A5F5',
+      backgroundImage: 'url(https://tphcm.cdnchinhphu.vn/334895287454388224/2024/7/15/ngoi-truong-17210084524331386092118.jpg)',
+    }} className='mx-auto w-full px-16 py-3 '>
       <div>
         {/* <span className='float-left'>{'shopInfo?.name'}</span> */}
         <div className='float-right flex justify-between space-x-2'>

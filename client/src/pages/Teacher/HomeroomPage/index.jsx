@@ -42,6 +42,11 @@ const ClassPage = () => {
               ]} 
               columns={[
                 {
+                  field: 'STT',
+                  enableSort: false,
+                  label: translate('STT'),
+                },
+                {
                   field: 'username',
                   enableSort: true,
                   label: translate('username'),
@@ -67,9 +72,10 @@ const ClassPage = () => {
                   label: translate('email'),
                 },
                 
-              ]} data={accounts?.map(item => ({
+              ]} data={accounts?.map((item, index) => ({
                 ...item,
                 'id': item._id,
+                'STT':  index + 1,
                 'avatar': (<div><img src={item.avatar}/></div>),
                 'className': item?.class?.name,
                 'address': null,

@@ -123,7 +123,11 @@ const AsignmentPage = () => {
                 },
               ]} 
               columns={[
-  
+                {
+                  field: 'STT',
+                  enableSort: false,
+                  label: translate('STT'),
+                },
                 {
                   field: 'subjectName',
                   enableSort: false,
@@ -136,8 +140,9 @@ const AsignmentPage = () => {
                   label: translate('teacher'),
                 },
                 
-              ]} data={assignments?.map(item => ({
+              ]} data={assignments?.map((item, index) => ({
                 ...item,
+                'STT': (Number.parseInt(page)-1)*Number.parseInt(limit) + index + 1,
                 'id': item._id,
                 subjectName: item?.subject?.name,
                 teacherName: item?.teacher?.fullname,

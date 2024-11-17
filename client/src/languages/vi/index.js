@@ -99,6 +99,14 @@ const sidebar = {
   'home-room-class': 'Lớp chủ nhiệm',
   'student-list': 'Danh sách học sinh',
   'assignment-class': 'Lớp giảng dạy',
+  'grade-class': 'Bảng điểm',
+  'father': 'Họ và tên cha',
+  'mother': 'Họ và tên mẹ',
+  'father-phone': 'Số điện thoại cha',
+  'mother-phone': 'Số điện thoại mẹ',
+  'note': 'Ghi chú',
+  'gender': 'Giới tính',
+  'details': 'Chi tiết',
 };
 
 const vi = {

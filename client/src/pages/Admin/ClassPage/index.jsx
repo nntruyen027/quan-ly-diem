@@ -144,7 +144,7 @@ const ClassPage = () => {
               ]} 
               columns={[
                 {
-                  field: 'id',
+                  field: 'STT',
                   enableSort: false,
                   label: translate('#'),
                 },
@@ -163,9 +163,10 @@ const ClassPage = () => {
                   enableSort: false,
                   label: translate('homeroom-teacher'),
                 },
-              ]} data={classes?.map(item => ({
+              ]} data={classes?.map((item, index) => ({
                 ...item,
                 'id': item._id,
+                'STT': (Number.parseInt(page)-1)*Number.parseInt(limit) + index + 1,
                 teacherName: item?.homeroomTeacher?.fullname,
                 students: null,
               }))} keyField='_id' onSort={(f, des) => {

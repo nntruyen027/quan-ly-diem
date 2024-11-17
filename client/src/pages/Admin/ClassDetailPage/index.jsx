@@ -123,6 +123,11 @@ const StudentPage = () => {
               ]} 
               columns={[
                 {
+                  field: 'STT',
+                  enableSort: false,
+                  label: translate('STT'),
+                },
+                {
                   field: 'username',
                   enableSort: true,
                   label: translate('username'),
@@ -148,8 +153,9 @@ const StudentPage = () => {
                   label: translate('email'),
                 },
                 
-              ]} data={accounts?.map(item => ({
+              ]} data={accounts?.map((item, index) => ({
                 ...item,
+                'STT': (Number.parseInt(page)-1)*Number.parseInt(limit) + index + 1,
                 'id': item._id,
                 'avatar': (<div><img src={item.avatar}/></div>),
                 'className': item?.class?.name,

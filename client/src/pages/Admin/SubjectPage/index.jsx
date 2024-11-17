@@ -136,7 +136,7 @@ const SubjectPage = () => {
               ]} 
               columns={[
                 {
-                  field: 'id',
+                  field: 'STT',
                   enableSort: false,
                   label: translate('#'),
                 },
@@ -170,9 +170,10 @@ const SubjectPage = () => {
                   enableSort: false,
                   label: translate('one-period'),
                 },
-              ]} data={subjects?.map(item => ({
+              ]} data={subjects?.map((item, index) => ({
                 ...item,
                 'id': item._id,
+                'STT': (Number.parseInt(page)-1)*Number.parseInt(limit) + index + 1,
               }))} keyField='_id' onSort={(f, des) => {
                 setOrderBy(f);
                 setDescending(des == 'desc');

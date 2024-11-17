@@ -94,7 +94,7 @@ exports.getHomeroomClass = async (req, res) => {
 
     res.status(200).json({
       data: {
-       ...object._doc,
+       ...object?._doc,
        students
       },
     })

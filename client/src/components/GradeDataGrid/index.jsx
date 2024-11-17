@@ -13,10 +13,10 @@ const extractTestScores = (tests, index) => (tests && tests[index] ? tests[index
 
 const getColumns = (numberOfOralTest, numberOf15mTest, numberOfOnePeriodTest) => [
   {
-    field: 'studentId', headerName: 'Student ID', flex: 1, minWidth: 100, 
+    field: 'stt', headerName: '#', flex: 1, minWidth: 100, 
   },
   {
-    field: 'studentName', headerName: 'Student Name', flex: 1.5, minWidth: 150, 
+    field: 'studentName', headerName: 'Tên học sinh', flex: 1.5, minWidth: 150, 
   },
   ...Array.from({
     length: numberOfOralTest, 
@@ -67,6 +67,7 @@ const GradeDataGrid = ({ classId, subjectId, }) => {
     ? grades.map((grade, index) => ({
       id: grade?._id || `generated-id-${index}`,
       studentId: grade?.student?._id,
+      stt: index+1,
       studentName: grade?.student?.name,
       ...Object.fromEntries([
         ...Array.from({

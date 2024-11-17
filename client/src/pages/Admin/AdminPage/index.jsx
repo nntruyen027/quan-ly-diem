@@ -108,6 +108,11 @@ const AdminPage = () => {
               ]} 
               columns={[
                 {
+                  field: 'STT',
+                  enableSort: true,
+                  label: translate('STT'),
+                },
+                {
                   field: 'username',
                   enableSort: true,
                   label: translate('username'),
@@ -133,8 +138,9 @@ const AdminPage = () => {
                   label: translate('email'),
                 },
                 
-              ]} data={accounts?.map(item => ({
+              ]} data={accounts?.map((item, index) => ({
                 ...item,
+                'STT': (Number.parseInt(page)-1)*Number.parseInt(limit) + index + 1,
                 'id': item._id,
                 'avatar': (<div className='w-20 h-20'><img src={`${process.env.REACT_APP_HOST_IP}/${item.avatar}`}/></div>),
                 'role': item?.isAdmin ? translate('admin') : item?.isTeacher ? translate('teacher') : translate('student'),

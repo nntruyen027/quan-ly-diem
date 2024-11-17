@@ -207,7 +207,7 @@ const StudentPage = () => {
                   >
                     <MenuItem value={'all'}>{translate('all')}</MenuItem>
                     {classes?.map((value, index) => (
-                      <MenuItem key={index} value={value?._id}>{`${value?.gradeLevel}${value?.name}`}</MenuItem>
+                      <MenuItem key={index} value={value?._id}>{`${value?.name}`}</MenuItem>
                     ))}
                   </Select>
                 </FormControl>
@@ -239,6 +239,11 @@ const StudentPage = () => {
               ]}
               columns={[
                 {
+                  field: 'STT',
+                  enableSort: false,
+                  label: translate('STT'),
+                },
+                {
                   field: 'username',
                   enableSort: true,
                   label: translate('username'),
@@ -264,8 +269,9 @@ const StudentPage = () => {
                   label: translate('email'),
                 },
               ]}
-              data={accounts?.map(item => ({
+              data={accounts?.map((item, index) => ({
                 ...item,
+                'STT': (Number.parseInt(page)-1)*Number.parseInt(limit) + index + 1,
                 'id': item._id,
                 'avatar': (<div><img src={item.avatar} alt='Avatar' /></div>),
                 'className': `${item?.class?.gradeLevel}${item?.class?.name}`,

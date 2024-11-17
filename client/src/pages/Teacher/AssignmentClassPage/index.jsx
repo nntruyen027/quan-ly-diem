@@ -56,7 +56,11 @@ const AsignmentPage = () => {
                 
               ]} 
               columns={[
-  
+                {
+                  field: 'STT',
+                  enableSort: false,
+                  label: translate('STT'),
+                },
                 {
                   field: 'subjectName',
                   enableSort: false,
@@ -69,9 +73,10 @@ const AsignmentPage = () => {
                   label: translate('class'),
                 },
                 
-              ]} data={assignments?.map(item => ({
+              ]} data={assignments?.map((item, index) => ({
                 ...item,
                 'id': item._id,
+                'STT': (Number.parseInt(page)-1)*Number.parseInt(limit) + index + 1,
                 subjectName: item?.subject?.name,
                 className: item?.class?.gradeLevel + item?.class?.name,
               }))} keyField='_id' onSort={(f, des) => {

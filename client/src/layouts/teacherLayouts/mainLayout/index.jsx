@@ -23,7 +23,7 @@ const TeacherMainLayout = ({ children, }) => {
     return (
       <div>
         <main className='flex bg-gray-50 h-screen overflow-hidden'>
-          <Sidebar className='bg-white' content={sidebar}/>
+          <Sidebar className='bg-[#1565C0] text-black' content={sidebar}/>
             
           <div className='flex flex-col flex-grow ' >
             <AdminHeader/>
