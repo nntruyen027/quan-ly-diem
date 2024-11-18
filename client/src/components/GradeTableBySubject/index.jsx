@@ -14,12 +14,12 @@ const GradeTableBySubject = ({ data, }) => {
   const exportToExcel = () => {
     const worksheet = XLSX.utils.json_to_sheet(
       data.map(item => ({
-        Student: item.student.name,
-        OralTests: joinScores(item.grades.oralTests),
-        FifteenMinTests: joinScores(item.grades.fifteenMinuteTests),
-        OnePeriodTests: joinScores(item.grades.onePeriodTests),
-        FinalExam: joinScores(item.grades.finalExam),
-        AverageScore: item.averageScore.toFixed(2),
+        Student: item?.student?.name,
+        OralTests: joinScores(item?.grades?.oralTests),
+        FifteenMinTests: joinScores(item?.grades?.fifteenMinuteTests),
+        OnePeriodTests: joinScores(item?.grades?.onePeriodTests),
+        FinalExam: joinScores(item?.grades?.finalExam),
+        AverageScore: item?.averageScore?.toFixed(2),
       }))
     );
     const workbook = XLSX.utils.book_new();
