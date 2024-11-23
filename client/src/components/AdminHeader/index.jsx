@@ -42,7 +42,7 @@ const AdminHeader = () => {
     <Paper sx={{
       background: '#1976d2',
       // backgroundImage: 'url(https://seaproperty.vn/wp-content/uploads/2023/09/Vinschool-Grand-Park-Thu-Duc.jpg)',
-    }} className='mx-auto w-full px-16 py-3 '>
+    }} className='mx-auto w-full px-16 py-2 '>
       <div>
         {/* <span className='float-left'>{translate('school-name')}</span> */}
         <div className='float-right flex justify-between space-x-2'>

@@ -27,7 +27,7 @@ const Sidebar = ({ className, content, }) => {
 
   return (
     <div className={`h-screen text-left py-4 px-0 relative top-0 left-0 shadow-md ${className} transition-all duration-300 ${isSidebarOpen ? 'w-60' : 'w-0'}`}>
-      <div className={`absolute top-6 ${isSidebarOpen ? '-right-12' : '-right-10'} hover:cursor-pointer`} onClick={toggleSidebar}>
+      <div className={`absolute top-4 ${isSidebarOpen ? '-right-10' : '-right-8'} hover:cursor-pointer`} onClick={toggleSidebar}>
         <FontAwesomeIcon className='text-white' icon={faBars} />
       </div>
       <div className={`${isSidebarOpen ? 'block' : 'hidden'} h-full overflow-y-auto`}>
