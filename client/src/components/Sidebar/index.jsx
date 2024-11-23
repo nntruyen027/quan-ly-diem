@@ -26,7 +26,7 @@ const Sidebar = ({ className, content, }) => {
   const hasActiveChild = (children) => children.some(child => isActive(child.path));
 
   return (
-    <div className={`h-screen text-left py-4 px-0 relative top-0 left-0 shadow-md ${className} transition-all duration-300 ${isSidebarOpen ? 'w-80' : 'w-0'}`}>
+    <div className={`h-screen text-left py-4 px-0 relative top-0 left-0 shadow-md ${className} transition-all duration-300 ${isSidebarOpen ? 'w-60' : 'w-0'}`}>
       <div className={`absolute top-6 ${isSidebarOpen ? '-right-12' : '-right-10'} hover:cursor-pointer`} onClick={toggleSidebar}>
         <FontAwesomeIcon className='text-white' icon={faBars} />
       </div>

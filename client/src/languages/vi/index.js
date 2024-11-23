@@ -107,6 +107,7 @@ const sidebar = {
   'note': 'Ghi chú',
   'gender': 'Giới tính',
   'details': 'Chi tiết',
+  'system-name': 'Hệ thống quản lý điểm trường THPT Cần Thơ',
 };
 
 const vi = {

@@ -40,11 +40,11 @@ const AdminHeader = () => {
 
   return (
     <Paper sx={{
-      background: '#42A5F5',
-      backgroundImage: 'url(https://tphcm.cdnchinhphu.vn/334895287454388224/2024/7/15/ngoi-truong-17210084524331386092118.jpg)',
+      background: '#1976d2',
+      // backgroundImage: 'url(https://seaproperty.vn/wp-content/uploads/2023/09/Vinschool-Grand-Park-Thu-Duc.jpg)',
     }} className='mx-auto w-full px-16 py-3 '>
       <div>
-        {/* <span className='float-left'>{'shopInfo?.name'}</span> */}
+        {/* <span className='float-left'>{translate('school-name')}</span> */}
         <div className='float-right flex justify-between space-x-2'>
           <Box sx={{
             flexGrow: 0, 
