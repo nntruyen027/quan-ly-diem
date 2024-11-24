@@ -50,11 +50,10 @@ exports.getGradesForClassAndSubject = async (req, res) => {
   console.log(teacherId, subjectId, classId)
 
   try {
-    // Kiểm tra quyền giáo viên xem điểm môn học
-    const teacherCanView = await canTeacherEditSubject(teacherId, subjectId, classId);
-    if (!teacherCanView) {
-      return res.status(403).json({ error: 'Bạn không có quyền xem điểm môn học này.' });
-    }
+    // const teacherCanView = await canTeacherEditSubject(teacherId, subjectId, classId);
+    // if (!teacherCanView) {
+    //   return res.status(403).json({ error: 'Bạn không có quyền xem điểm môn học này.' });
+    // }
 
     const students = await User.find({ class: classId });
     const studentGrades = await Promise.all(
@@ -115,6 +114,9 @@ exports.getGradesForClassByTermAndYear = async (req, res) => {
 
 // Kiểm tra quyền giáo viên nhập/sửa điểm môn học
 async function canTeacherEditSubject(teacherId, subjectId, classId) {
+  const admin = await User.findById(teacherId)
+  if(admin.isAdmin)
+    return true
   // Tìm trong bảng TeachingAssignment
   const teachingAssignment = await TeachingAssignment.findOne({
     teacher: teacherId,
